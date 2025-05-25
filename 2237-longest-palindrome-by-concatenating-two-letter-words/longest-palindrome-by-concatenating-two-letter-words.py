@@ -1,0 +1,15 @@
+class Solution:
+    def longestPalindrome(self, words: List[str]) -> int:
+        map = Counter(words)
+        count = 0
+        alreadyPalindrome = 0
+        for w, freq in map.items():
+            s = w[::-1]
+            if w == s:
+                count += (freq // 2) * 4
+                if freq % 2:
+                    alreadyPalindrome = 1
+            elif w < s and s in map:
+                count += min(freq, map[s]) * 4
+        
+        return count + alreadyPalindrome * 2
