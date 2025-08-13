@@ -1,5 +1,7 @@
 class Solution:
     def isPowerOfThree(self, n: int) -> bool:
+        
+        @cache
         def f(num):
             if num == 1:
                 return True
