@@ -1,26 +1,18 @@
 class Solution:
     def jump(self, nums: List[int]) -> int:
-        
+    
         n = len(nums)
+        l = 0
+        r = 0
+        jumps = 0
+        while r < n - 1:
+            farthest = 0
 
-        maxJump = float('inf')
-        memo = {}
-        def jumpRecur(i):
-            nonlocal maxJump
-            if i >= n:
-                return 0
-            if i == n -1:
-                return 0
-
-            if i in memo:
-                return memo[i]
-            j = nums[i]
-            minJump = float('inf')
-
-            for jump in range(i+1,i+j+1):
-                minJump = min(minJump, 1 + jumpRecur(jump))
+            for i in range(l, r + 1):
+                farthest = max(farthest, i + nums[i])
             
-            memo[i] = minJump
-            return minJump
-
-        return jumpRecur(0)
+            l = r + 1
+            r = farthest
+            jumps += 1
+        
+        return jumps
