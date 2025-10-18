@@ -6,24 +6,25 @@
 #         self.right = right
 class Solution:
     def pathSum(self, root: Optional[TreeNode], targetSum: int) -> int:
-        
-        if not root:
-            return 0
-        
-        return( self.pathSum(root.left, targetSum)
-        + self.pathSum(root.right, targetSum)
-        + self.pathSum2(root, targetSum))
-
-    def pathSum2(self, node, summ):
-        if not node:
-            return 0
-
+        # better O(N) approach
         count = 0
-        if node.val == summ:
-            count = 1
-        
-        newSum = summ - node.val
-        count += self.pathSum2(node.left, newSum)
-        count += self.pathSum2(node.right, newSum)
+        prefix = {0:1}
 
+        def dfs(node, curSum):
+            nonlocal count
+            if not node:
+                return
+            
+            curSum += node.val
+
+            count += prefix.get(curSum - targetSum, 0)
+
+            prefix[curSum] = prefix.get(curSum, 0) + 1
+
+            dfs(node.left, curSum)
+            dfs(node.right, curSum)
+
+            prefix[curSum] -= 1
+        
+        dfs(root, 0)
         return count
