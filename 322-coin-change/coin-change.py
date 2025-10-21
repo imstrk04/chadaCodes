@@ -1,24 +1,24 @@
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        n = len(coins)
-        dp = [[-1 for _ in range(amount + 1)] for _ in range(n)]
-        def f(ind, target):
-            if ind == 0:
-                if target % coins[0] == 0:
-                    return target // coins[0]
-                else:
-                    return float('inf')
-            
-            if dp[ind][target] != -1:
-                return dp[ind][target]
+        coins.sort()
+        memo = {0:0}
 
-            notTake = f(ind - 1, target)
-            take = float('inf')
-            if target >= coins[ind]:
-                take = 1+ f(ind, target - coins[ind]) # stay here till u can take the coin as many times as u can till the if condition fails
+        def min_coins(amt):
+            if amt in memo:
+                return memo[amt]
             
-            dp[ind][target] = min(take, notTake)   
-            return dp[ind][target]
+            minn = float('inf')
+            for coin in coins:
+                diff = amt - coin
+                if diff < 0:
+                    break
+                minn = min(minn, 1 + min_coins(diff))
+            
+            memo[amt] = minn
+            return memo[amt]
         
-        ans = f(n - 1, amount)
-        return -1 if ans == float('inf') else ans
+        result = min_coins(amount)
+        if result < float('inf'):
+            return result
+        else:
+            return -1
