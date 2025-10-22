@@ -1,18 +1,18 @@
 class Solution:
     def coinChange(self, coins: List[int], amount: int) -> int:
-        coins.sort()
-        memo = {0:0}
+        @cache
+        def f(ind, target):
+            if ind == 0:
+                return target // coins[0] if target % coins[0] == 0 else float('inf')
 
-        dp = [0] * (amount + 1)
-
-        for i in range(1, amount + 1):
-            minn = float('inf')
-            for coin in coins:
-                diff = i - coin
-                if diff < 0:
-                    break
-                minn = min(minn, dp[diff] + 1)
- 
-            dp[i] = minn
+            notTake = 0 + f(ind - 1, target)
+            take = float('inf')
+            # i can only take if the coins[i] lesser than my target
+            if coins[ind] <= target:
+                take = 1 + f(ind, target - coins[ind])
+             
+            return min(take, notTake)
         
-        return dp[amount] if dp[amount] < float('inf') else -1
+        n = len(coins)
+        ans = f(n - 1, amount)  
+        return ans if ans != float('inf') else -1
