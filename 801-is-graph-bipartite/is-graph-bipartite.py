@@ -6,19 +6,19 @@ class Solution:
         n = len(graph)
         colour = [-1] * n
 
+        def dfs(node, c):
+            colour[node] = c
+            for nei in graph[node]:
+                if colour[nei] == -1:
+                    if not dfs(nei, 1-c):
+                        return False
+                elif colour[nei] == c:
+                    return False
+            return True
+        
         for start in range(n):
             if colour[start] == -1:
-                queue = collections.deque([start])
-                colour[start] = 0
-
-                while queue:
-                    node = queue.popleft()
-
-                    for nei in graph[node]:
-                        if colour[nei] == -1:
-                            colour[nei] = 1 - colour[node]
-                            queue.append(nei)
-                        elif colour[nei] == colour[node]:
-                            return False
-            
+                if not dfs(start, 1):
+                    return False
+        
         return True
